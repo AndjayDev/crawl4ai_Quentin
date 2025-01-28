@@ -1,5 +1,5 @@
 services:
-  crawl4ai:   # Simplified service name
+  crawl4ai:
     image: unclecode/crawl4ai:${VERSION:-basic}-amd64
     ports:
       - "11235:11235"
@@ -10,6 +10,8 @@ services:
       - CRAWL4AI_API_TOKEN=${CRAWL4AI_API_TOKEN:-}
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - CLAUDE_API_KEY=${CLAUDE_API_KEY:-}
+	  - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - MiniMax-Text-01_API_KEY=${MiniMax-Text-01_API_KEY:-}  
     volumes:
       - /dev/shm:/dev/shm
     deploy:
@@ -19,10 +21,33 @@ services:
         reservations:
           memory: 1G
     restart: unless-stopped
-healthcheck:
-  test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
-  interval: 30s
-  timeout: 10s
-  retries: 3
-  start_period: 40s
+    labels:
+      # Maintain existing Coolify labels
+      - coolify.managed=true
+      - coolify.version=4.0.0-beta.389
+      - coolify.applicationId=8
+      - coolify.type=application
+      # Traefik specific configuration
+      - traefik.enable=true
+      - traefik.http.middlewares.gzip.compress=true
+      - "traefik.http.routers.crawl4ai.rule=Host(`ysksokgkoocgs888wkg8o8wg.147.93.56.140.sslip.io`)"
+      - "traefik.http.services.crawl4ai.loadbalancer.server.port=11235"
+      - "traefik.http.services.crawl4ai.loadbalancer.healthcheck.path=/health"
+      - "traefik.http.services.crawl4ai.loadbalancer.healthcheck.interval=10s"
+      - "traefik.http.services.crawl4ai.loadbalancer.healthcheck.timeout=5s"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11235/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - traefik-public
+      - default
+
+networks:
+  traefik-public:
+    external: true
+  default:
+    name: ${COOLIFY_NETWORK:-coolify-network}
 
