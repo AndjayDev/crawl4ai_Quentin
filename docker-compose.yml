@@ -42,9 +42,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - ksg4o0kgos8w0gwkk8sos8s8
+      - poc4okkwg4cko0g48w48sk08
 
 networks:
-  ksg4o0kgos8w0gwkk8sos8s8:
+  poc4okkwg4cko0g48w48sk08:
     external: true
 
