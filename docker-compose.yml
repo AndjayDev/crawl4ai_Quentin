@@ -41,10 +41,5 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    networks:
-      - poc4okkwg4cko0g48w48sk08
-
-networks:
-  poc4okkwg4cko0g48w48sk08:
-    external: true
+network_mode: "container:coolify-proxy"
 
