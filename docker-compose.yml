@@ -42,12 +42,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - traefik-public
-      - default
+      - ksg4o0kgos8w0gwkk8sos8s8
 
 networks:
-  traefik-public:
+  ksg4o0kgos8w0gwkk8sos8s8:
     external: true
-  default:
-    name: ${COOLIFY_NETWORK:-coolify-network}
 
